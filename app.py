@@ -3,6 +3,10 @@ from streamlit_gsheets import GSheetsConnection
 import pandas as pd
 import datetime
 
+
+#page title
+st.set_page_config(page_title="Treino dos Guris", page_icon="💪")
+
 # Autenticação =================================================================================================
 
 # Establishing a Google Sheets connection
@@ -42,13 +46,13 @@ TREINOS = [
     'TRÍCEPS',
     'OMBROS',
     'PERNAS',
-    'ABDÔMEN',
     'AEROBICO',
 ]
 
 EXERCICIOS_PEITO = [
     'SUPINO RETO',
     'SUPINO INCLINADO',
+    'CROSSOVER',
     'CRUCIFIXO',
     'VOADOR',
 ]
@@ -58,6 +62,9 @@ EXERCICIOS_TRICEPS = [
     'PULLEY INVERTIDO',
     'PULLEY BARRA RETA',
     'COICE',
+    'TRICEPS TESTA',
+    'TRICEPS BANCO',
+    'TRICEPS POLIA',
 ]
 
 EXERCICIOS_PERNAS = [
@@ -66,6 +73,14 @@ EXERCICIOS_PERNAS = [
     'FLEXORA',
     'EXTENSORA',
     'PANTURRILHA',
+    'HACK',
+    'ADUTOR',
+    'ABDUTOR',
+    'AGACHAMENTO LIVRE',
+    'SUMO',
+    'AFUNDO',
+    'STIFF',
+
 ]
 
 EXERCICIOS_OMBROS = [
@@ -78,10 +93,11 @@ EXERCICIOS_OMBROS = [
 ]
 
 EXERCICIOS_COSTAS = [
-    'REMADA ALTA',
-    'REMADA FRENTE',
+    'PUXADA ALTA',
+    'REMADA BAIXA',
     'SERROTE',
     'CAVALO',
+    'REMADA CURVADA',
 ]
 
 EXERCICIOS_BICEPS = [
@@ -89,18 +105,20 @@ EXERCICIOS_BICEPS = [
     'ROSCA ALTERNADA',
     'ROSCA SCOTT',
     'ROSCA MARTELO',
+    'POLIA',
 ]
 
-EXERCICIOS_ABDOMEM = [
-    'ABDOMINAL',
-    'PRANCHA',
-    'ABDOMINAL MAQUINA',
-]
+# EXERCICIOS_ABDOMEM = [
+#     'ABDOMINAL',
+#     'PRANCHA',
+#     'ABDOMINAL MAQUINA',
+# ]
 
 EXERCICIOS_AEROBICO = [
-    'CORRIDA',
-    'BIKE',
-    'ESTEIRA',
+    'SIT UP',
+    'REMADOR',
+    'KNEE UP',
+    'ABDOMINAL ALTERNADO',
 ]
 
 #================================================================================================
@@ -122,8 +140,8 @@ def mostrar_exercicios(treino, atleta):
             qtd_exercicios = len(EXERCICIOS_COSTAS)
         elif treino == 'BÍCEPS':
             qtd_exercicios = len(EXERCICIOS_BICEPS)
-        elif treino == 'ABDÔMEN':
-            qtd_exercicios = len(EXERCICIOS_ABDOMEM)
+        # elif treino == 'ABDÔMEN':
+        #     qtd_exercicios = len(EXERCICIOS_ABDOMEM)
         elif treino == 'AEROBICO':
             qtd_exercicios = len(EXERCICIOS_AEROBICO)
 
@@ -151,8 +169,8 @@ def mostrar_exercicios(treino, atleta):
             exercicios = EXERCICIOS_COSTAS
         elif treino == 'BÍCEPS':
             exercicios = EXERCICIOS_BICEPS
-        elif treino == 'ABDÔMEN':
-            exercicios = EXERCICIOS_ABDOMEM
+        # elif treino == 'ABDÔMEN':
+        #     exercicios = EXERCICIOS_ABDOMEM
         elif treino == 'AEROBICO':
             exercicios = EXERCICIOS_AEROBICO
 
@@ -243,7 +261,7 @@ st.write(f'Hoje é {today}')
 
 st.subheader('O que vamos treinar hoje?')
 atleta = st.selectbox('Selecione o atleta', ATLETAS, key='atletas_multiselect', placeholder='Selecione um atleta')
-TREINOS = ['PEITO', 'TRÍCEPS', 'PERNAS', 'OMBROS', 'COSTAS', 'BÍCEPS', 'ABDÔMEN', 'AEROBICO']
+TREINOS = ['PEITO', 'TRÍCEPS', 'PERNAS', 'OMBROS', 'COSTAS', 'BÍCEPS', 'AEROBICO']
 treino = st.multiselect('Selecione os treinos do dia', TREINOS, key='treino_multiselect', placeholder='Selecione um ou mais treinos')
 
 teste = treino
