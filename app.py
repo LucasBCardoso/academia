@@ -5,7 +5,7 @@ import datetime
 
 
 #page title
-st.set_page_config(page_title="Treino dos Guris", page_icon="💪")
+st.set_page_config(page_title="Treino dos Guris 3.0", page_icon="💪")
 hide_st_style = """
             <style>
             #MainMenu {visibility: hidden;}
