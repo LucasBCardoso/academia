@@ -5,7 +5,7 @@ import datetime
 
 
 #page title
-st.set_page_config(page_title="Treino dos Guris 3.0", page_icon="💪")
+st.set_page_config(page_title="Treino dos Guris 3.1", page_icon="💪")
 hide_st_style = """
             <style>
             #MainMenu {visibility: hidden;}
@@ -77,11 +77,10 @@ EXERCICIOS_TRICEPS = [
 
 EXERCICIOS_PERNAS = [
     'LEG PRESS',
-    'AGACHAMENTO MAQUINA',
+    'AGACHAMENTO HACK',
     'FLEXORA',
     'EXTENSORA',
     'PANTURRILHA',
-    'HACK',
     'ADUTOR',
     'ABDUTOR',
     'AGACHAMENTO LIVRE',
@@ -187,13 +186,19 @@ def mostrar_exercicios(treino, atleta):
 
         with st.form(key="train_form"):
             for i, exercicio in enumerate(exercicios):
-                col1, col2, col3 = st.columns([2, 1, 2])  # Adjust column sizes
+                col1, col2, col3 = st.columns([1, 1, 1])  # Adjust column sizes
                 with col1:
                     carga = st.number_input(f'Carga para {exercicio}', key=f'{treino.lower()}_{i}_carga', min_value=0, step=1)
                 with col2:
                     rodadas = st.number_input('Rodadas', key=f'{treino.lower()}_{i}_rodadas', min_value=0, step=1)
                 with col3:
                     repeticoes = st.number_input('Repetições', key=f'{treino.lower()}_{i}_repeticoes', min_value=0, step=1)
+                
+                #add blank space
+                st.write(" ")
+                st.write(" ")
+
+
 
                 # Append input values for each exercise
                 dados_de_carga_list.append({
@@ -264,11 +269,30 @@ def mostrar_exercicios(treino, atleta):
 
 # #================================================================================================
 
-st.title('Treino dos Guris')
-st.write(f'Hoje é {today}')
+#st.title('Treino dos Guris 💪')
+#make the title be upwards of the page
+st.markdown("<h1 style='text-align: center; color: white;'>Treino dos Guris 💪</h1>", unsafe_allow_html=True)
+#add margin top and bottom to the title
+st.markdown("<style>h1{margin-top: -90px;}</style>", unsafe_allow_html=True)
+#center the date below the title
+st.markdown("<h6 style='text-align: center; color: white;'>Hoje é " + today + "</h6>", unsafe_allow_html=True)
+st.markdown("<style>h6{margin-top: -40px;}</style>", unsafe_allow_html=True)
+#st.write(f'Hoje é {today}')
 
 st.subheader('O que vamos treinar hoje?')
 atleta = st.selectbox('Selecione o atleta', ATLETAS, key='atletas_multiselect', placeholder='Selecione um atleta')
+#mostrar o nome e data do ultimo treino do atleta escolhido pegando dados da planilha treinos e mostrando em um dataframe
+treino_recente = df_treinos[df_treinos['ATLETA'] == atleta].iloc[-1:]
+
+#get all treinos from atleta selected and show the total of treinos in a new column in the df treino_recente called 'TOTAL'
+treinos_atleta = df_treinos[df_treinos['ATLETA'] == atleta]
+treinos_atleta['TREINOS REGISTRADOS'] = treinos_atleta.groupby('ATLETA')['ATLETA'].transform('count')
+#show only the last treino
+treinos_atleta = treinos_atleta.iloc[-1:]
+
+st.write(f"Último treino de {atleta}:")
+st.write(treinos_atleta)
+
 TREINOS = ['PEITO', 'TRÍCEPS', 'PERNAS', 'OMBROS', 'COSTAS', 'BÍCEPS', 'AEROBICO']
 treino = st.multiselect('Selecione os treinos do dia', TREINOS, key='treino_multiselect', placeholder='Selecione um ou mais treinos')
 
