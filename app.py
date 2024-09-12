@@ -6,7 +6,7 @@ import time
 
 
 #page title
-st.set_page_config(page_title="Treino dos Guris 4.1", page_icon="💪", initial_sidebar_state="collapsed")
+st.set_page_config(page_title="Treino dos Guris 4.2", page_icon="💪", initial_sidebar_state="collapsed")
 hide_st_style = """
             <style>
             #MainMenu {visibility: hidden;}
