@@ -293,26 +293,62 @@ EXERCICIOS_AEROBICO = [
 #make the title be upwards of the page
 st.markdown("<h1 style='text-align: center; color: white;'>Treino dos Guris 💪</h1>", unsafe_allow_html=True)
 #add margin top and bottom to the title
-st.markdown("<style>h1{margin-top: -10px;}</style>", unsafe_allow_html=True)
+st.markdown("<style>h1{margin-top: -80px;}</style>", unsafe_allow_html=True)
 #center the date below the title
 st.markdown("<h6 style='text-align: center; color: white;'>Hoje é " + today + "</h6>", unsafe_allow_html=True)
 st.markdown("<style>h6{margin-top: -20px;}</style>", unsafe_allow_html=True)
 #st.write(f'Hoje é {today}')
 
-st.subheader('O que vamos treinar hoje?')
+#st.subheader('O que vamos treinar hoje?')
 atleta = st.selectbox('Selecione o atleta', ATLETAS, key='atletas_multiselect', placeholder='Selecione um atleta')
 #mostrar o nome e data do ultimo treino do atleta escolhido pegando dados da planilha treinos e mostrando em um dataframe
-treino_recente = df_treinos[df_treinos['ATLETA'] == atleta].iloc[-1:]
+#treino_recente = df_treinos[df_treinos['ATLETA'] == atleta].iloc[-1:]
+
+#if today is thursday 12/09/2024, monday is 09/09/2024, so the first day of the week is 09/09/2024 and the last day is 15/09/2024, based on that filter all treinos from the current week
+df_treinos['DATA'] = pd.to_datetime(df_treinos['DATA'], format='%d/%m/%Y')
+df_treinos['SEMANA'] = df_treinos['DATA'].dt.isocalendar().week
+df_treinos['ANO'] = df_treinos['DATA'].dt.isocalendar().year
+df_treinos['DIA'] = df_treinos['DATA'].dt.isocalendar().day
+df_treinos['DIA DA SEMANA'] = df_treinos['DATA'].dt.day_name()
+df_treinos['DATA'] = df_treinos['DATA'].dt.strftime('%d/%m/%Y')
+
+#get today's week number and show only the treinos from the current week
+current_week = df_treinos['SEMANA'].max()
+current_year = df_treinos['ANO'].max()
+treinos_atleta = df_treinos[(df_treinos['ATLETA'] == atleta) & (df_treinos['SEMANA'] == current_week) & (df_treinos['ANO'] == current_year)]
+#show weekday on pt-br
+treinos_atleta['DIA DA SEMANA'] = treinos_atleta['DIA DA SEMANA'].map({'Monday': 'Segunda', 'Tuesday': 'Terça', 'Wednesday': 'Quarta', 'Thursday': 'Quinta', 'Friday': 'Sexta', 'Saturday': 'Sábado', 'Sunday': 'Domingo'})
+treinos_atleta = treinos_atleta.drop(columns=['SEMANA', 'ANO', 'DIA'])
+treinos_atleta = treinos_atleta.rename(columns={'DIA DA SEMANA': 'DIA'})
+treinos_atleta = treinos_atleta.reset_index(drop=True)
+
+#if the week ends and another begins with no registered trainings, show the last training
+if treinos_atleta.empty:
+    treinos_atleta = df_treinos[(df_treinos['ATLETA'] == atleta)].iloc[-1:]
+    treinos_atleta = treinos_atleta.reset_index(drop=True)
+
 
 #get all treinos from atleta selected and show the total of treinos in a new column in the df treino_recente called 'TOTAL'
-treinos_atleta = df_treinos[df_treinos['ATLETA'] == atleta]
-treinos_atleta['TREINOS REGISTRADOS'] = treinos_atleta.groupby('ATLETA')['ATLETA'].transform('count')
+#treinos_atleta = df_treinos[df_treinos['ATLETA'] == atleta]
+# treinos_atleta.loc[:, 'TREINOS REGISTRADOS'] = treinos_atleta.groupby('ATLETA')['ATLETA'].transform('count')
 #show only the last treino
-treinos_atleta = treinos_atleta.iloc[-3:] #if number of treinos is less than 3, show all
-treinos_atleta = treinos_atleta.drop_duplicates(subset=['ATLETA', 'TREINO', 'DATA'], keep='last')
+# treinos_atleta = treinos_atleta.iloc[-3:] #if number of treinos is less than 3, show all
+# treinos_atleta = treinos_atleta.drop_duplicates(subset=['ATLETA', 'TREINO', 'DATA'], keep='last')
+#================================================================================================
+
 
 st.write(f"Últimos treinos de {atleta}:")
 st.write(treinos_atleta)
+
+# edit = st.button('Clique aqui para editar o último treino', type='primary')
+# if edit:
+#     st.session_state['atleta'] = atleta
+#     st.switch_page("pages/editar.py")
+
+st.divider()
+
+st.markdown("<h3 style='text-align: center; color: white;'>Bora Treinar!</h3>", unsafe_allow_html=True)
+st.markdown("<style>h3{margin-bottom: -30px;}</style>", unsafe_allow_html=True)
 
 TREINOS = ['PEITO', 'TRÍCEPS', 'PERNAS', 'OMBROS', 'COSTAS', 'BÍCEPS', 'AEROBICO']
 treino = st.multiselect('Selecione os treinos do dia', TREINOS, key='treino_multiselect', placeholder='Selecione um ou mais treinos')

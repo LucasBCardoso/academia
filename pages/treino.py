@@ -159,3 +159,12 @@ if 'treino' in st.session_state and 'atleta' in st.session_state:
     # st.write(f"Treino do atleta {atleta}:")
 else:
     st.error("Dados de treino não encontrados, volte para a página inicial.")
+    st.write(f'''
+        <a target="_self" href="https://treinodosguris.streamlit.app">
+            <button>
+                VOLTAR A PAGINA INICIAL
+            </button>
+        </a>
+        ''',
+        unsafe_allow_html=True
+    )
