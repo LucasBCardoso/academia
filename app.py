@@ -6,7 +6,7 @@ import time
 
 
 #page title
-st.set_page_config(page_title="Treino dos Guris 4.0", page_icon="💪", initial_sidebar_state="collapsed")
+st.set_page_config(page_title="Treino dos Guris 4.1", page_icon="💪", initial_sidebar_state="collapsed")
 hide_st_style = """
             <style>
             #MainMenu {visibility: hidden;}
@@ -308,9 +308,10 @@ treino_recente = df_treinos[df_treinos['ATLETA'] == atleta].iloc[-1:]
 treinos_atleta = df_treinos[df_treinos['ATLETA'] == atleta]
 treinos_atleta['TREINOS REGISTRADOS'] = treinos_atleta.groupby('ATLETA')['ATLETA'].transform('count')
 #show only the last treino
-treinos_atleta = treinos_atleta.iloc[-1:]
+treinos_atleta = treinos_atleta.iloc[-3:] #if number of treinos is less than 3, show all
+treinos_atleta = treinos_atleta.drop_duplicates(subset=['ATLETA', 'TREINO', 'DATA'], keep='last')
 
-st.write(f"Último treino de {atleta}:")
+st.write(f"Últimos treinos de {atleta}:")
 st.write(treinos_atleta)
 
 TREINOS = ['PEITO', 'TRÍCEPS', 'PERNAS', 'OMBROS', 'COSTAS', 'BÍCEPS', 'AEROBICO']

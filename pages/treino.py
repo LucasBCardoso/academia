@@ -18,8 +18,8 @@ st.markdown(hide_st_style, unsafe_allow_html=True)
 cargas = conn.read(worksheet='cargas')
 cargas = cargas.dropna(how="all")
 df_cargas = pd.DataFrame(cargas)
-print('DATAFRAME ATUAL')
-print(df_cargas)
+# print('DATAFRAME ATUAL')
+# print(df_cargas)
 #================================================================================================
 
 #função de conexão com o google sheets
